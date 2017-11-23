@@ -1,5 +1,6 @@
 package com.thisistime.microservices.limitsservice;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.thisistime.microservices.limitsservice.bean.LimitsConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,4 +18,14 @@ public class LimitsConfigurationController {
 
     }
 
+
+    @GetMapping("/fault-tolerance-example")
+    @HystrixCommand(fallbackMethod = "fallbackRetreiveConfiguration")
+    public LimitsConfiguration retreiveConfiguration(){
+        throw new RuntimeException("Not available");
+    }
+
+    public LimitsConfiguration fallbackRetreiveConfiguration(){
+        return new LimitsConfiguration(999, 9);
+    }
 }
